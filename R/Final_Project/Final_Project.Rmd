@@ -1,0 +1,206 @@
+---
+title: "Final Project - Delaney Smith"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+## Introduction
+  This is where I describe the project
+
+## Methods
+**1) Load in Libraries and Data**
+    This step is necessary to ensure that we have the necessary packages installed to be able to run specific functions.
+```{r Library, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(modelr)
+library(moderndive)
+library(gapminder)
+library(broom)
+library(knitr)
+library(stargazer)
+```
+**2) Load in Data and Change Titles**
+  In this section I loaded in my original data set. Then I had to change the column titles to match the original dataset.
+```{r Load Data, include=FALSE}
+marissa_data1 <- read.csv('~/R/Final_Project/Final_Project_Data.csv', header=T, na.strings=".")
+#Change column headers
+marissa_data <- marissa_data1 %>% 
+  rename(
+    Sex = M.F,
+    LarvaeAge = Age.month,
+    InVitroViability = In.Vitro.Viability,
+    InVitroExsheathment = In.vitro.Exsheathment,
+    InVivoViability = In.Vivo.Viability,
+    InVivoExsheathment = In.Vivo.Exsheathment
+    )
+```
+
+**3) Sort Data by Cycle and Sort Out NA Values**
+  From that original data set I went through and created subgroups of data sets for each cycle we were interested. After that I created more data sets that filtered out the specific rows that contained NA values for use in specific models.
+```{r Sorting Data, include=FALSE}
+cycle_1 <- filter(marissa_data, Cycle == 1)
+cycle_2 <- filter(marissa_data, Cycle == 2)
+cycle_3 <- filter(marissa_data, Cycle == 3)
+cycle_4 <- filter(marissa_data, Cycle == 4)
+cycle_5 <- filter(marissa_data, Cycle == 5)
+no_InVitro_comp_data <- filter(marissa_data, !is.na(InVitroViability))
+cycle_1NA_vitro <- filter(cycle_1, !is.na(InVitroViability))
+cycle_1NA_hatch <- filter(cycle_1, !is.na(Hatchability))
+cycle_2NA_vitro <- filter(cycle_2, !is.na(InVitroViability))
+cycle_2NA_hatch <- filter(cycle_2, !is.na(Hatchability))
+cycle_3NA_vitro <- filter(cycle_3, !is.na(InVitroViability))
+cycle_3NA_hatch <- filter(cycle_3, !is.na(Hatchability))
+cycle_4NA_vitro <- filter(cycle_4, !is.na(InVitroViability))
+cycle_4NA_hatch <- filter(cycle_4, !is.na(Hatchability))
+cycle_5NA_vitro <- filter(cycle_5, !is.na(InVitroViability))
+cycle_5NA_hatch <- filter(cycle_5, !is.na(Hatchability))
+```
+
+**4) Create Cycle Specific Models**
+  In this section I wanted to create any and all form of exploratory model to test the various ways that Larvae Age has an impact on each variable. 
+```{r Cycle Models, include=FALSE}
+model_A1 <- lm(LarvaeAge ~ InVitroViability, data = cycle_1NA_vitro)
+summary(model_A1)
+model_B1 <- lm(LarvaeAge ~ InVitroExsheathment, data = cycle_1NA_vitro)
+summary(model_B1)
+model_C1 <- lm(LarvaeAge ~ InVivoViability, data = cycle_1)
+summary(model_C1)
+model_D1 <- lm(LarvaeAge ~ InVivoExsheathment, data = cycle_1)
+summary(model_D1)
+model_E1 <- lm(LarvaeAge ~ Hatchability, data = cycle_1NA_hatch)
+summary(model_E1)
+model_F1 <- lm(LarvaeAge ~ InVitroViability + InVitroExsheathment, data = cycle_1NA_vitro)
+summary(model_F1)
+model_G1 <- lm(LarvaeAge ~ InVivoViability + InVivoExsheathment, data = cycle_1)
+summary(model_G1)
+model_H1 <- lm(LarvaeAge ~ InVitroViability + InVivoViability, data = cycle_1NA_vitro)
+summary(model_H1)
+model_I1 <- lm(LarvaeAge ~ InVitroExsheathment + InVivoExsheathment, data = cycle_1NA_vitro)
+summary(model_I1)
+model_J1 <- lm(LarvaeAge ~ InVitroViability + InVitroExsheathment + 
+                 InVivoViability + InVivoExsheathment + Hatchability, data = cycle_1NA_hatch)
+summary(model_J1)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Cycle 2
+model_A2 <- lm(LarvaeAge ~ InVitroViability, data = cycle_2NA_vitro)
+summary(model_A2) 
+model_B2 <- lm(LarvaeAge ~ InVitroExsheathment, data = cycle_2NA_vitro)
+summary(model_B2)
+model_C2 <- lm(LarvaeAge ~ InVivoViability, data = cycle_2)
+summary(model_C2)
+model_D2 <- lm(LarvaeAge ~ InVivoExsheathment, data = cycle_2)
+summary(model_D2)
+model_E2 <- lm(LarvaeAge ~ Hatchability, data = cycle_2NA_hatch)
+summary(model_E2)
+model_F2 <- lm(LarvaeAge ~ InVitroViability + InVitroExsheathment, data = cycle_2NA_vitro)
+summary(model_F2)
+model_G2 <- lm(LarvaeAge ~ InVivoViability + InVivoExsheathment, data = cycle_2)
+summary(model_G2)
+model_H2 <- lm(LarvaeAge ~ InVitroViability + InVivoViability, data = cycle_2NA_vitro)
+summary(model_H2)
+model_I2 <- lm(LarvaeAge ~ InVitroExsheathment + InVivoExsheathment, data = cycle_2NA_vitro)
+summary(model_I2)
+model_J2 <- lm(LarvaeAge ~ InVitroViability + InVitroExsheathment + 
+                InVivoViability + InVivoExsheathment + Hatchability, data = cycle_2NA_hatch)
+summary(model_J2)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Cycle 3
+model_A3 <- lm(LarvaeAge ~ InVitroViability, data = cycle_3NA_vitro)
+summary(model_A3) 
+model_B3 <- lm(LarvaeAge ~ InVitroExsheathment, data = cycle_3NA_vitro)
+summary(model_B3)
+model_C3 <- lm(LarvaeAge ~ InVivoViability, data = cycle_3)
+summary(model_C3)
+model_D3 <- lm(LarvaeAge ~ InVivoExsheathment, data = cycle_3)
+summary(model_D3)
+model_E3 <- lm(LarvaeAge ~ Hatchability, data = cycle_3NA_hatch)
+summary(model_E3)
+model_F3 <- lm(LarvaeAge ~ InVitroViability + InVitroExsheathment, data = cycle_3NA_vitro)
+summary(model_F3)
+model_G3 <- lm(LarvaeAge ~ InVivoViability + InVivoExsheathment, data = cycle_3)
+summary(model_G3)
+model_H3 <- lm(LarvaeAge ~ InVitroViability + InVivoViability, data = cycle_3NA_vitro)
+summary(model_H3)
+model_I3 <- lm(LarvaeAge ~ InVitroExsheathment + InVivoExsheathment, data = cycle_3NA_vitro)
+summary(model_I3)
+model_J3 <- lm(LarvaeAge ~ InVitroViability + InVitroExsheathment + 
+                 InVivoViability + InVivoExsheathment + Hatchability, data = cycle_3NA_hatch)
+summary(model_J3)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Cycle 4
+model_A4 <- lm(LarvaeAge ~ InVitroViability, data = cycle_4NA_vitro)
+summary(model_A4) 
+model_B4 <- lm(LarvaeAge ~ InVitroExsheathment, data = cycle_4NA_vitro)
+summary(model_B4)
+model_C4 <- lm(LarvaeAge ~ InVivoViability, data = cycle_4)
+summary(model_C4)
+model_D4 <- lm(LarvaeAge ~ InVivoExsheathment, data = cycle_4)
+summary(model_D4)
+model_E4 <- lm(LarvaeAge ~ Hatchability, data = cycle_4NA_hatch)
+summary(model_E4)
+model_F4 <- lm(LarvaeAge ~ InVitroViability + InVitroExsheathment, data = cycle_4NA_vitro)
+summary(model_F4)
+model_G4 <- lm(LarvaeAge ~ InVivoViability + InVivoExsheathment, data = cycle_4)
+summary(model_G4)
+model_H4 <- lm(LarvaeAge ~ InVitroViability + InVivoViability, data = cycle_4NA_vitro)
+summary(model_H4)
+model_I4 <- lm(LarvaeAge ~ InVitroExsheathment + InVivoExsheathment, data = cycle_4NA_vitro)
+summary(model_I4)
+model_J4 <- lm(LarvaeAge ~ InVitroViability + InVitroExsheathment + 
+                 InVivoViability + InVivoExsheathment + Hatchability, data = cycle_4NA_hatch)
+summary(model_J4)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Cycle 5
+model_A5 <- lm(LarvaeAge ~ InVitroViability, data = cycle_5NA_vitro)
+summary(model_A5) 
+model_B5 <- lm(LarvaeAge ~ InVitroExsheathment, data = cycle_5NA_vitro)
+summary(model_B5)
+model_C5 <- lm(LarvaeAge ~ InVivoViability, data = cycle_5)
+summary(model_C5)
+model_D5 <- lm(LarvaeAge ~ InVivoExsheathment, data = cycle_5)
+summary(model_D5)
+model_E5 <- lm(LarvaeAge ~ Hatchability, data = cycle_5NA_hatch)
+summary(model_E5)
+model_F5 <- lm(LarvaeAge ~ InVitroViability + InVitroExsheathment, data = cycle_5NA_vitro)
+summary(model_F5)
+model_G5 <- lm(LarvaeAge ~ InVivoViability + InVivoExsheathment, data = cycle_5)
+summary(model_G5)
+model_H5 <- lm(LarvaeAge ~ InVitroViability + InVivoViability, data = cycle_5NA_vitro)
+summary(model_H5)
+model_I5 <- lm(LarvaeAge ~ InVitroExsheathment + InVivoExsheathment, data = cycle_5NA_vitro)
+summary(model_I5)
+model_J5 <- lm(LarvaeAge ~ InVitroViability + InVitroExsheathment + 
+                 InVivoViability + InVivoExsheathment + Hatchability, data = cycle_5NA_hatch)
+summary(model_J5)
+```
+
+
+**Cycle 1 Modeling Statistics**
+```{r Cycle 1 Table, results='asis', message=FALSE, echo=FALSE, cache=TRUE}
+stargazer(model_A1, model_B1, model_C1, model_D1, model_E1, model_F1, model_G1, model_H1, model_I1, model_J1, type = "html", notes.append = FALSE, notes.label = "Symbols", notes = c("<sup>&#42;</sup>p<0.1; <sup>&#42;&#42;</sup>p<0.05; <sup>&#42;&#42;&#42;</sup>p<0.01"), keep.stat = "adj.rsq", column.labels = c("A1", "B1","C1", "D1","E1", "F1","G1", "H1","I1", "J1"), multicolumn = TRUE, ci = TRUE)
+```
+
+**Cycle 2 Modeling Statistics**
+```{r Cycle 2 Table, results='asis', message=FALSE, echo=FALSE, cache=TRUE}
+stargazer(model_A2, model_B2, model_C2, model_D2, model_E2, model_F2, model_G2, model_H2, model_I2, model_J2, type = "html", notes.append = FALSE, notes.label = "Symbols", notes = c("<sup>&#42;</sup>p<0.1; <sup>&#42;&#42;</sup>p<0.05; <sup>&#42;&#42;&#42;</sup>p<0.01"), keep.stat = "adj.rsq", column.labels = c("A2", "B2","C2", "D2","E2", "F2","G2", "H2","I2", "J2"), multicolumn = TRUE, ci = TRUE)
+```
+
+**Cycle 3 Modeling Statistics**
+```{r Cycle 3 Table, results='asis', message=FALSE, echo=FALSE, cache=TRUE}
+stargazer(model_A3, model_B3, model_C3, model_D3, model_E3, model_F3, model_G3, model_H3, model_I3, model_J3, type = "html", notes.append = FALSE, notes.label = "Symbols", notes = c("<sup>&#42;</sup>p<0.1; <sup>&#42;&#42;</sup>p<0.05; <sup>&#42;&#42;&#42;</sup>p<0.01"), keep.stat = "adj.rsq", column.labels = c("A3", "B3","C3", "D3","E3", "F3","G3", "H3","I3", "J3"), multicolumn = TRUE, ci = TRUE)
+```
+
+**Cycle 4 Modeling Statistics**
+```{r Cycle 4 Table, results='asis', message=FALSE, echo=FALSE, cache=TRUE}
+stargazer(model_A4, model_B4, model_C4, model_D4, model_E4, model_F4, model_G4, model_H4, model_I4, model_J4, type = "html", notes.append = FALSE, notes.label = "Symbols", notes = c("<sup>&#42;</sup>p<0.1; <sup>&#42;&#42;</sup>p<0.05; <sup>&#42;&#42;&#42;</sup>p<0.01"), keep.stat = "adj.rsq", column.labels = c("A4","B4","C4","D4","E4","F4","G4","H4","I4","J4"), multicolumn = TRUE, ci = TRUE)
+```
+
+**Cycle 5 Modeling Statistics**
+```{r Cycle 5 Table, results='asis', message=FALSE, echo=FALSE, cache=TRUE}
+stargazer(model_A5, model_B5, model_C5, model_D5, model_E5, model_F5, model_G5, model_H5, model_I5, model_J5, type = "html", notes.append = FALSE, notes.label = "Symbols", notes = c("<sup>&#42;</sup>p<0.1; <sup>&#42;&#42;</sup>p<0.05; <sup>&#42;&#42;&#42;</sup>p<0.01"), keep.stat = "adj.rsq", column.labels = c("A5","B5","C5","D5","E5","F5","G5","H5","I5","J5"), multicolumn = TRUE, ci = TRUE)
+```
+
+
+
