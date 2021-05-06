@@ -6,11 +6,14 @@ output:
   pdf_document: default
 ---
 ## Introduction
-  This is where I describe the project
+  
+  The purpose of this project is to determine if season and larval age have any effect on the livelihood of the parasite. This is done by measuring the viability, exsheathment and hatchability of the worms and their eggs. Viability is calculated by watching the movement of worms after they were grown either in vivo or in vitro. Hatchability is calculated by seeing how many eggs hatch from feces collected from each animal on trial. Exsheathment is calculated by counting the number of worms that lose their sheath, or outer covering, after being exposed to carbon dioxide.
 
 ## Methods
 **1) Load in Libraries and Data**
-    This step is necessary to ensure that we have the necessary packages installed to be able to run specific functions.
+    
+This step is necessary to ensure that we have the necessary packages installed to be able to run specific functions.
+    
 ```{r Library, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
@@ -21,8 +24,9 @@ library(broom)
 library(knitr)
 library(stargazer)
 ```
+
 **2) Load in Data and Change Titles**
-  In this section I loaded in my original data set. Then I had to change the column titles to match the original dataset.
+  In this section I loaded in my data set. Then I had to change the column titles to match the original data set that originlly had fewer cycles listed out.
 ```{r Load Data, include=FALSE}
 marissa_data1 <- read.csv('~/R/Final_Project/Final_Project_Data.csv', header=T, na.strings=".")
 #Change column headers
@@ -33,19 +37,23 @@ marissa_data <- marissa_data1 %>%
     InVitroViability = In.Vitro.Viability,
     InVitroExsheathment = In.vitro.Exsheathment,
     InVivoViability = In.Vivo.Viability,
-    InVivoExsheathment = In.Vivo.Exsheathment
-    )
+    InVivoExsheathment = In.Vivo.Exsheathment)
 ```
 
 **3) Sort Data by Cycle and Sort Out NA Values**
-  From that original data set I went through and created subgroups of data sets for each cycle we were interested. After that I created more data sets that filtered out the specific rows that contained NA values for use in specific models.
+  
+  From that original data set I went through and created subgroups of data sets for each cycle to signify the seasonality of values. After that I created more specialized data sets that filtered out the specific rows containing NA values for use in specific models.
 ```{r Sorting Data, include=FALSE}
 cycle_1 <- filter(marissa_data, Cycle == 1)
 cycle_2 <- filter(marissa_data, Cycle == 2)
 cycle_3 <- filter(marissa_data, Cycle == 3)
 cycle_4 <- filter(marissa_data, Cycle == 4)
 cycle_5 <- filter(marissa_data, Cycle == 5)
-no_InVitro_comp_data <- filter(marissa_data, !is.na(InVitroViability))
+no_hatch_comp_data <- filter(marissa_data, !is.na(Hatchability))
+no_InVivo_comp_data <- filter(marissa_data, !is.na(InVivoViability))
+no_InVitro_comp_data <- filter(no_InVivo_comp_data, !is.na(InVitroViability))
+drops <- ("Hatchability")
+no_hatch_col <- no_InVitro_comp_data[ , !(names(no_InVitro_comp_data) %in% drops)]
 cycle_1NA_vitro <- filter(cycle_1, !is.na(InVitroViability))
 cycle_1NA_hatch <- filter(cycle_1, !is.na(Hatchability))
 cycle_2NA_vitro <- filter(cycle_2, !is.na(InVitroViability))
@@ -59,7 +67,8 @@ cycle_5NA_hatch <- filter(cycle_5, !is.na(Hatchability))
 ```
 
 **4) Create Cycle Specific Models**
-  In this section I wanted to create any and all form of exploratory model to test the various ways that Larvae Age has an impact on each variable. 
+  
+  In this section I wanted to create any and all form of exploratory model to test the various ways that Larvae Age has an impact on each variable within each cycle. 
 ```{r Cycle Models, include=FALSE}
 model_A1 <- lm(LarvaeAge ~ InVitroViability, data = cycle_1NA_vitro)
 summary(model_A1)
@@ -176,6 +185,22 @@ model_J5 <- lm(LarvaeAge ~ InVitroViability + InVitroExsheathment +
 summary(model_J5)
 ```
 
+**5) Define Models**
+
+Models for all cycles were ddefined using the following variables. In the cooresponding summary tables, the number that follows the Model Letter corresponds to the cycle for which those models were run.
+
+Model Letter | X-Value  | Y-Value | Data Set
+------------- | -------------  | ------------- | ------------- 
+A | LarvaeAge | In Vitro Viability | cycle_#NA_vitro
+B | LarvaeAge | In Vitro Exsheathment | cycle_#NA_vitro
+C | LarvaeAge | In Vivo Viability | cycle_#
+D | LarvaeAge | In Vivo Exsheathment | cycle_#
+E | LarvaeAge | Hatchability | cycle_#NA_hatch
+F | LarvaeAge | In Vitro Viability + In Vitro Exsheathment | cycle_#NA_vitro
+G | LarvaeAge | In Vivo Viability + In Vivo Exsheathment | cycle_#
+H | LarvaeAge | In Vitro Viability + In Vivo Viability| cycle_#NA_vitro
+I | LarvaeAge | In Vitro Exsheatment + In Vivo Exsheathment | cycle_#NA_vitro
+J | LarvaeAge | In Vitro Exsheatment + In Vivo Exsheathment + In Vitro Viability + In Vivo Viability + Hatchability| cycle_#NA_hatch
 
 **Cycle 1 Modeling Statistics**
 ```{r Cycle 1 Table, results='asis', message=FALSE, echo=FALSE, cache=TRUE}
@@ -202,5 +227,25 @@ stargazer(model_A4, model_B4, model_C4, model_D4, model_E4, model_F4, model_G4, 
 stargazer(model_A5, model_B5, model_C5, model_D5, model_E5, model_F5, model_G5, model_H5, model_I5, model_J5, type = "html", notes.append = FALSE, notes.label = "Symbols", notes = c("<sup>&#42;</sup>p<0.1; <sup>&#42;&#42;</sup>p<0.05; <sup>&#42;&#42;&#42;</sup>p<0.01"), keep.stat = "adj.rsq", column.labels = c("A5","B5","C5","D5","E5","F5","G5","H5","I5","J5"), multicolumn = TRUE, ci = TRUE)
 ```
 
+**6) Create Intercycle Models**
+ 
+  In this section I used the results from the cycle specific models to compare results between the cycles. 
+```{r Intercycle models, include=FALSE}
+model_K <- lm(Cycle ~ InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment, data = no_hatch_col)
+summary(model_K)
+model_L <- lm(LarvaeAge + Cycle ~ InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment, data = no_hatch_col)
+summary(model_L)
+model_M <- lm(LarvaeAge + Cycle ~ InVitroViability + InVivoViability, data = no_hatch_col)
+summary(model_M)
+model_N <- lm(LarvaeAge + Cycle ~ InVitroExsheathment + InVivoExsheathment, data = no_hatch_col)
+summary(model_N)
+model_O <- lm(LarvaeAge + Cycle ~ Hatchability, data = no_hatch_comp_data)
+summary(model_O)
+model_P <- lm(LarvaeAge + Cycle ~ InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment + Hatchability, data = marissa_data)
+summary(model_P)
+```
 
-
+**Intercycle Modeling Statistics**
+```{r Intercycle table, results='asis', message=FALSE, echo=FALSE, cache=TRUE}
+stargazer(model_K, model_L, model_M, model_N, model_O, model_P, type = "html", notes.append = FALSE, notes.label = "Symbols", notes = c("<sup>&#42;</sup>p<0.1; <sup>&#42;&#42;</sup>p<0.05; <sup>&#42;&#42;&#42;</sup>p<0.01"), keep.stat = "adj.rsq", column.labels = c("K","L","M","N","O","P"), multicolumn = TRUE, ci = TRUE)
+```
