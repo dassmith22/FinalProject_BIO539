@@ -266,3 +266,73 @@ summary(model_O)
 model_P <- lm(LarvaeAge + Cycle ~ InVitroViability + InVitroExsheathment + 
                 InVivoViability + InVivoExsheathment + Hatchability, data = marissa_data)
 summary(model_P)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Graphs
+#Cycle 1
+ggplot(model_A1, aes(LarvaeAge, InVitroViability)) + geom_point() + geom_smooth()
+ggplot(model_B1, aes(LarvaeAge, InVitroExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_C1, aes(LarvaeAge, InVivoViability)) + geom_point() + geom_smooth()
+ggplot(model_D1, aes(LarvaeAge, InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_E1, aes(LarvaeAge, Hatchability)) + geom_point() + geom_smooth()
+ggplot(model_F1, aes(LarvaeAge, InVitroViability + InVitroExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_G1, aes(LarvaeAge, InVivoViability + InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_H1, aes(LarvaeAge, InVivoViability + InVitroViability)) + geom_point() + geom_smooth()
+ggplot(model_I1, aes(LarvaeAge, InVitroExsheathment + InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_J1, aes(LarvaeAge, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment + Hatchability)) + geom_point() + geom_smooth()
+
+#Cycle 2
+ggplot(model_A2, aes(LarvaeAge, InVitroViability)) + geom_point() + geom_smooth()
+ggplot(model_B2, aes(LarvaeAge, InVitroExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_C2, aes(LarvaeAge, InVivoViability)) + geom_point() + geom_smooth()
+ggplot(model_D2, aes(LarvaeAge, InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_E2, aes(LarvaeAge, Hatchability)) + geom_point() + geom_smooth()
+ggplot(model_F2, aes(LarvaeAge, InVitroViability + InVitroExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_G2, aes(LarvaeAge, InVivoViability + InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_H2, aes(LarvaeAge, InVivoViability + InVitroViability)) + geom_point() + geom_smooth()
+ggplot(model_I2, aes(LarvaeAge, InVitroExsheathment + InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_J2, aes(LarvaeAge, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment + Hatchability)) + geom_point() + geom_smooth()
+
+#Cycle 3
+ggplot(model_A3, aes(LarvaeAge, InVitroViability)) + geom_point() + geom_smooth()
+ggplot(model_B3, aes(LarvaeAge, InVitroExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_C3, aes(LarvaeAge, InVivoViability)) + geom_point() + geom_smooth()
+ggplot(model_D3, aes(LarvaeAge, InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_E3, aes(LarvaeAge, Hatchability)) + geom_point() + geom_smooth()
+ggplot(model_F3, aes(LarvaeAge, InVitroViability + InVitroExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_G3, aes(LarvaeAge, InVivoViability + InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_H3, aes(LarvaeAge, InVivoViability + InVitroViability)) + geom_point() + geom_smooth()
+ggplot(model_I3, aes(LarvaeAge, InVitroExsheathment + InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_J3, aes(LarvaeAge, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment + Hatchability)) + geom_point() + geom_smooth()
+
+#Cycle 4
+ggplot(model_A4, aes(LarvaeAge, InVitroViability)) + geom_point() + geom_smooth()
+ggplot(model_B4, aes(LarvaeAge, InVitroExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_C4, aes(LarvaeAge, InVivoViability)) + geom_point() + geom_smooth()
+ggplot(model_D4, aes(LarvaeAge, InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_E4, aes(LarvaeAge, Hatchability)) + geom_point() + geom_smooth()
+ggplot(model_F4, aes(LarvaeAge, InVitroViability + InVitroExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_G4, aes(LarvaeAge, InVivoViability + InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_H4, aes(LarvaeAge, InVivoViability + InVitroViability)) + geom_point() + geom_smooth()
+ggplot(model_I4, aes(LarvaeAge, InVitroExsheathment + InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_J4, aes(LarvaeAge, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment + Hatchability)) + geom_point() + geom_smooth()
+
+#Cycle 5
+ggplot(model_A5, aes(LarvaeAge, InVitroViability)) + geom_point() + geom_smooth()
+ggplot(model_B5, aes(LarvaeAge, InVitroExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_C5, aes(LarvaeAge, InVivoViability)) + geom_point() + geom_smooth()
+ggplot(model_D5, aes(LarvaeAge, InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_E5, aes(LarvaeAge, Hatchability)) + geom_point() + geom_smooth()
+ggplot(model_F5, aes(LarvaeAge, InVitroViability + InVitroExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_G5, aes(LarvaeAge, InVivoViability + InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_H5, aes(LarvaeAge, InVivoViability + InVitroViability)) + geom_point() + geom_smooth()
+ggplot(model_I5, aes(LarvaeAge, InVitroExsheathment + InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(model_J5, aes(LarvaeAge, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment + Hatchability)) + geom_point() + geom_smooth()
+
+#Intercycle
+ggplot(no_hatch_col, aes(Cycle, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(no_hatch_col, aes(LarvaeAge + Cycle, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(no_hatch_col, aes(LarvaeAge + Cycle, InVitroViability + InVivoViability)) + geom_point() + geom_smooth()
+ggplot(no_hatch_col, aes(LarvaeAge + Cycle, InVitroExsheathment + InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(no_hatch_comp_data, aes(LarvaeAge + Cycle, Hatchability)) + geom_point() + geom_smooth()
+ggplot(marissa_data, aes(LarvaeAge + Cycle, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment + Hatchability)) + geom_point() + geom_smooth()
