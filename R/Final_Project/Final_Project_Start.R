@@ -35,8 +35,17 @@ cycle_5 <- filter(marissa_data, Cycle == 5)
   #Cycle to cycle for viability, exsheathment, an hatchability by larval age
 
 #data sets that remove NA values for accurate results
-no_InVitro_comp_data <- filter(marissa_data, !is.na(InVitroViability))
+no_hatch_comp_data <- filter(marissa_data, !is.na(Hatchability))
+view(no_hatch_comp_data)
+
+no_InVivo_comp_data <- filter(marissa_data, !is.na(InVivoViability))
+view(no_InVivo_comp_data)
+
+no_InVitro_comp_data <- filter(no_InVivo_comp_data, !is.na(InVitroViability))
 view(no_InVitro_comp_data)
+
+drops <- ("Hatchability")
+no_hatch_col <- no_InVitro_comp_data[ , !(names(no_InVitro_comp_data) %in% drops)]
 
 cycle_1NA_vitro <- filter(cycle_1, !is.na(InVitroViability))
 view(cycle_1NA_vitro)
@@ -236,3 +245,24 @@ model_J5 <- lm(LarvaeAge ~ InVitroViability + InVitroExsheathment +
 summary(model_J5)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Inter cycle modeling
+model_K <- lm(Cycle ~ InVitroViability + InVitroExsheathment + 
+                InVivoViability + InVivoExsheathment, data = no_hatch_col)
+summary(model_K)
+
+model_L <- lm(LarvaeAge + Cycle ~ InVitroViability + InVitroExsheathment + 
+                InVivoViability + InVivoExsheathment, data = no_hatch_col)
+summary(model_L)
+
+model_M <- lm(LarvaeAge + Cycle ~ InVitroViability + InVivoViability, data = no_hatch_col)
+summary(model_M)
+
+model_N <- lm(LarvaeAge + Cycle ~ InVitroExsheathment + InVivoExsheathment, data = no_hatch_col)
+summary(model_N)
+
+model_O <- lm(LarvaeAge + Cycle ~ Hatchability, data = no_hatch_comp_data)
+summary(model_O)
+
+model_P <- lm(LarvaeAge + Cycle ~ InVitroViability + InVitroExsheathment + 
+                InVivoViability + InVivoExsheathment + Hatchability, data = marissa_data)
+summary(model_P)
