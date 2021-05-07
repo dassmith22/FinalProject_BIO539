@@ -27,7 +27,7 @@ library(stargazer)
 
 **2) Load in Data and Change Titles**
 
-  In this section I loaded in my data set. Then I had to change the column titles to match the original data set that originlly had fewer cycles listed out.
+  In this section I loaded in my data set. Then I had to change the column titles to match the original data set which originlly had fewer cycles listed out.
 ```{r Load Data, include=FALSE}
 marissa_data1 <- read.csv('~/R/Final_Project/Final_Project_Data.csv', header=T, na.strings=".")
 #Change column headers
@@ -53,8 +53,7 @@ cycle_5 <- filter(marissa_data, Cycle == 5)
 no_hatch_comp_data <- filter(marissa_data, !is.na(Hatchability))
 no_InVivo_comp_data <- filter(marissa_data, !is.na(InVivoViability))
 no_InVitro_comp_data <- filter(no_InVivo_comp_data, !is.na(InVitroViability))
-drops <- ("Hatchability")
-no_hatch_col <- no_InVitro_comp_data[ , !(names(no_InVitro_comp_data) %in% drops)]
+no_cycle1 <- filter(marissa_data, Cycle == 2:5)
 cycle_1NA_vitro <- filter(cycle_1, !is.na(InVitroViability))
 cycle_1NA_hatch <- filter(cycle_1, !is.na(Hatchability))
 cycle_2NA_vitro <- filter(cycle_2, !is.na(InVitroViability))
@@ -188,7 +187,7 @@ summary(model_J5)
 
 **5) Define Models**
 
-Models for all cycles were ddefined using the following variables. In the cooresponding summary tables, the number that follows the Model Letter corresponds to the cycle for which those models were run.
+Models for all cycles were defined using the following variables. In the corresponding summary tables, the number that follows the Model Letter corresponds to the cycle for which those models were run.
 
 Model Letter | X-Value  | Y-Value | Data Set
 ------------- | -------------  | ------------- | ------------- 
@@ -200,8 +199,15 @@ E | LarvaeAge | Hatchability | cycle_#NA_hatch
 F | LarvaeAge | In Vitro Viability + In Vitro Exsheathment | cycle_#NA_vitro
 G | LarvaeAge | In Vivo Viability + In Vivo Exsheathment | cycle_#
 H | LarvaeAge | In Vitro Viability + In Vivo Viability| cycle_#NA_vitro
-I | LarvaeAge | In Vitro Exsheatment + In Vivo Exsheathment | cycle_#NA_vitro
-J | LarvaeAge | In Vitro Exsheatment + In Vivo Exsheathment + In Vitro Viability + In Vivo Viability + Hatchability| cycle_#NA_hatch
+I | LarvaeAge | In Vitro Exsheathment + In Vivo Exsheathment | cycle_#NA_vitro
+J | LarvaeAge | In Vitro Exsheathment + In Vivo Exsheathment + In Vitro Viability + In Vivo Viability + Hatchability| cycle_#NA_hatch
+K | Cycle | InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment | no_cycle1
+L | LarvaeAge + Cycle | InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment | no_cycle1
+M | LarvaeAge + Cycle | InVitroViability + InVivoViability | no_cycle1
+N | LarvaeAge + Cycle | In Vitro Exsheathment + In Vivo Exsheathment | no_cycle1
+O | LarvaeAge + Cycle | Hatchability | no_cycle1
+P | LarvaeAge + Cycle | InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment + Hatchability | no_cycle1
+Q | LarvaeAge + Cycle | InVivoExsheathment | no_cycle1
 
 **Cycle 1 Modeling Statistics**
 ```{r Cycle 1 Table, results='asis', message=FALSE, echo=FALSE, cache=TRUE}
@@ -232,23 +238,25 @@ stargazer(model_A5, model_B5, model_C5, model_D5, model_E5, model_F5, model_G5, 
  
   In this section I used the results from the cycle specific models to compare results between the cycles. 
 ```{r Intercycle models, include=FALSE}
-model_K <- lm(Cycle ~ InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment, data = no_hatch_col)
+model_K <- lm(Cycle ~ InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment, data = no_cycle1)
 summary(model_K)
-model_L <- lm(LarvaeAge + Cycle ~ InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment, data = no_hatch_col)
+model_L <- lm(LarvaeAge + Cycle ~ InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment, data = no_cycle1)
 summary(model_L)
-model_M <- lm(LarvaeAge + Cycle ~ InVitroViability + InVivoViability, data = no_hatch_col)
+model_M <- lm(LarvaeAge + Cycle ~ InVitroViability + InVivoViability, data = no_cycle1)
 summary(model_M)
-model_N <- lm(LarvaeAge + Cycle ~ InVitroExsheathment + InVivoExsheathment, data = no_hatch_col)
+model_N <- lm(LarvaeAge + Cycle ~ InVitroExsheathment + InVivoExsheathment, data = no_cycle1)
 summary(model_N)
-model_O <- lm(LarvaeAge + Cycle ~ Hatchability, data = no_hatch_comp_data)
+model_O <- lm(LarvaeAge + Cycle ~ Hatchability, data = no_cycle1)
 summary(model_O)
-model_P <- lm(LarvaeAge + Cycle ~ InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment + Hatchability, data = marissa_data)
+model_P <- lm(LarvaeAge + Cycle ~ InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment + Hatchability, data = no_cycle1)
 summary(model_P)
+model_Q <- lm(LarvaeAge + Cycle ~ InVivoExsheathment, data = no_cycle1)
+summary(model_Q)
 ```
 
 **Intercycle Modeling Statistics**
 ```{r Intercycle table, results='asis', message=FALSE, echo=FALSE, cache=TRUE}
-stargazer(model_K, model_L, model_M, model_N, model_O, model_P, type = "html", notes.append = FALSE, notes.label = "Symbols", notes = c("<sup>&#42;</sup>p<0.1; <sup>&#42;&#42;</sup>p<0.05; <sup>&#42;&#42;&#42;</sup>p<0.01"), keep.stat = "adj.rsq", column.labels = c("K","L","M","N","O","P"), multicolumn = TRUE, ci = TRUE)
+stargazer(model_K, model_L, model_M, model_N, model_O, model_P, model_Q, type = "html", notes.append = FALSE, notes.label = "Symbols", notes = c("<sup>&#42;</sup>p<0.1; <sup>&#42;&#42;</sup>p<0.05; <sup>&#42;&#42;&#42;</sup>p<0.01"), keep.stat = "adj.rsq", column.labels = c("K","L","M","N","O","P","Q"), multicolumn = TRUE, ci = TRUE)
 ```
 
 **Graphing**
@@ -311,11 +319,12 @@ ggplot(model_H5, aes(LarvaeAge, InVivoViability + InVitroViability)) + geom_poin
 ggplot(model_I5, aes(LarvaeAge, InVitroExsheathment + InVivoExsheathment)) + geom_point() + geom_smooth()
 ggplot(model_J5, aes(LarvaeAge, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment + Hatchability)) + geom_point() + geom_smooth()
 #Intercycles
-ggplot(no_hatch_col, aes(Cycle, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment)) + geom_point() + geom_smooth()
-ggplot(no_hatch_col, aes(LarvaeAge + Cycle, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment)) + geom_point() + geom_smooth()
-ggplot(no_hatch_col, aes(LarvaeAge + Cycle, InVitroViability + InVivoViability)) + geom_point() + geom_smooth()
-ggplot(no_hatch_col, aes(LarvaeAge + Cycle, InVitroExsheathment + InVivoExsheathment)) + geom_point() + geom_smooth()
-ggplot(no_hatch_comp_data, aes(LarvaeAge + Cycle, Hatchability)) + geom_point() + geom_smooth()
-ggplot(marissa_data, aes(LarvaeAge + Cycle, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment + Hatchability)) + geom_point() + geom_smooth()
+ggplot(no_cycle1, aes(Cycle, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(no_cycle1, aes(LarvaeAge + Cycle, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(no_cycle1, aes(LarvaeAge + Cycle, InVitroViability + InVivoViability)) + geom_point() + geom_smooth()
+ggplot(no_cycle1, aes(LarvaeAge + Cycle, InVitroExsheathment + InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(no_cycle1, aes(LarvaeAge + Cycle, Hatchability)) + geom_point() + geom_smooth()
+ggplot(no_cycle1, aes(LarvaeAge + Cycle, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment + Hatchability)) + geom_point() + geom_smooth()
+ggplot(no_cycle1, aes(LarvaeAge + Cycle, InVivoExsheathment)) + geom_point() + geom_smooth()
 ```
 
