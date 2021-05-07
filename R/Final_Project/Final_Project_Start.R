@@ -44,8 +44,8 @@ view(no_InVivo_comp_data)
 no_InVitro_comp_data <- filter(no_InVivo_comp_data, !is.na(InVitroViability))
 view(no_InVitro_comp_data)
 
-drops <- ("Hatchability")
-no_hatch_col <- no_InVitro_comp_data[ , !(names(no_InVitro_comp_data) %in% drops)]
+no_cycle1 <- filter(marissa_data, Cycle == 2:5)
+view(no_cycle1)
 
 cycle_1NA_vitro <- filter(cycle_1, !is.na(InVitroViability))
 view(cycle_1NA_vitro)
@@ -247,27 +247,29 @@ summary(model_J5)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Inter cycle modeling
 model_K <- lm(Cycle ~ InVitroViability + InVitroExsheathment + 
-                InVivoViability + InVivoExsheathment, data = no_hatch_col)
+                InVivoViability + InVivoExsheathment, data = no_cycle1)
 summary(model_K)
 
 model_L <- lm(LarvaeAge + Cycle ~ InVitroViability + InVitroExsheathment + 
-                InVivoViability + InVivoExsheathment, data = no_hatch_col)
+                InVivoViability + InVivoExsheathment, data = no_cycle1)
 summary(model_L)
 
-model_M <- lm(LarvaeAge + Cycle ~ InVitroViability + InVivoViability, data = no_hatch_col)
+model_M <- lm(LarvaeAge + Cycle ~ InVitroViability + InVivoViability, data = no_cycle1)
 summary(model_M)
 
-model_N <- lm(LarvaeAge + Cycle ~ InVitroExsheathment + InVivoExsheathment, data = no_hatch_col)
+model_N <- lm(LarvaeAge + Cycle ~ InVitroExsheathment + InVivoExsheathment, data = no_cycle1)
 summary(model_N)
 
-model_O <- lm(LarvaeAge + Cycle ~ Hatchability, data = no_hatch_comp_data)
+model_O <- lm(LarvaeAge + Cycle ~ Hatchability, data = no_cycle1)
 summary(model_O)
 
 model_P <- lm(LarvaeAge + Cycle ~ InVitroViability + InVitroExsheathment + 
-                InVivoViability + InVivoExsheathment + Hatchability, data = marissa_data)
+                InVivoViability + InVivoExsheathment + Hatchability, data = no_cycle1)
 summary(model_P)
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+model_Q <- lm(LarvaeAge + Cycle ~ InVivoExsheathment, data = no_cycle1)
+summary(model_Q)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Graphs
 #Cycle 1
 ggplot(model_A1, aes(LarvaeAge, InVitroViability)) + geom_point() + geom_smooth()
@@ -330,9 +332,9 @@ ggplot(model_I5, aes(LarvaeAge, InVitroExsheathment + InVivoExsheathment)) + geo
 ggplot(model_J5, aes(LarvaeAge, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment + Hatchability)) + geom_point() + geom_smooth()
 
 #Intercycle
-ggplot(no_hatch_col, aes(Cycle, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment)) + geom_point() + geom_smooth()
-ggplot(no_hatch_col, aes(LarvaeAge + Cycle, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment)) + geom_point() + geom_smooth()
-ggplot(no_hatch_col, aes(LarvaeAge + Cycle, InVitroViability + InVivoViability)) + geom_point() + geom_smooth()
-ggplot(no_hatch_col, aes(LarvaeAge + Cycle, InVitroExsheathment + InVivoExsheathment)) + geom_point() + geom_smooth()
-ggplot(no_hatch_comp_data, aes(LarvaeAge + Cycle, Hatchability)) + geom_point() + geom_smooth()
-ggplot(marissa_data, aes(LarvaeAge + Cycle, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment + Hatchability)) + geom_point() + geom_smooth()
+ggplot(no_cycle1, aes(Cycle, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(no_cycle1, aes(LarvaeAge + Cycle, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(no_cycle1, aes(LarvaeAge + Cycle, InVitroViability + InVivoViability)) + geom_point() + geom_smooth()
+ggplot(no_cycle1, aes(LarvaeAge + Cycle, InVitroExsheathment + InVivoExsheathment)) + geom_point() + geom_smooth()
+ggplot(no_cycle1, aes(LarvaeAge + Cycle, Hatchability)) + geom_point() + geom_smooth()
+ggplot(no_cycle1, aes(LarvaeAge + Cycle, InVitroViability + InVitroExsheathment + InVivoViability + InVivoExsheathment + Hatchability)) + geom_point() + geom_smooth()
